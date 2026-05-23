@@ -16,6 +16,15 @@ const newAlarmTime = ref('');
 onMounted(() => {
   setInterval(() => {
     currentTime.value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    // Check for alarms
+    const now = new Date();
+    const formattedNow = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    alarms.value.forEach(alarm => {
+      if (alarm.enabled && alarm.time === formattedNow) {
+        alert('Alarm Ringing!');
+        alarm.enabled = false; // Prevent repeated alerts
+      }
+    });
   }, 1000);
 });
 
