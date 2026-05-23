@@ -18,11 +18,19 @@ onMounted(() => {
     currentTime.value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     // Check for alarms
     const now = new Date();
-    const formattedNow = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Using HH:mm format to match <input type="time">
+    const formattedNow = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    
     alarms.value.forEach(alarm => {
       if (alarm.enabled && alarm.time === formattedNow) {
-        alert('Alarm Ringing!');
-        alarm.enabled = false; // Prevent repeated alerts
+        console.log('Alarm trigger matched:', alarm.time);
+        alert('Alarm Ringing: ' + alarm.label);
+        
+        // Play a simple sound
+        const audio = new Audio('https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg');
+        audio.play().catch(e => console.error("Audio playback failed:", e));
+        
+        alarm.enabled = false; 
       }
     });
   }, 1000);
